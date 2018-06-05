@@ -34,16 +34,20 @@
 
 
 .game-area {
-    background-color: lightgray;
+    background-image: url(img/dirt.png);
+    background-size: cover;
 }
 
 .wall {
-    background-color: violet;
+    background-image: url(img/wall_vines4.png);
+    /* background-size: cover; */
+    background-repeat: repeat;
     /* border: 1px solid black */
 }
 
 .start-btn {
-    background-color: rgb(133, 255, 133);
+    background-image: url(img/dngn_green_crystal_wall.png);
+
 }
 
 .finish-btn {
