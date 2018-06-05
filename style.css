@@ -1,0 +1,38 @@
+.maze-div {
+    background-color: lightblue;
+    width: 768px;
+    height: 480px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    border: 1px solid black;
+
+}
+
+
+
+.cell {
+    min-width: 3.125%;
+    min-height: 5%;
+    /* border: 1px solid black; */
+    box-sizing: border-box;
+    flex: 1;
+}
+
+
+
+.game-area {
+    background-color: lightgray;
+}
+
+.wall {
+    background-color: violet;
+}
+
+.start-btn {
+    background-color: chartreuse;
+}
+
+.finish-btn {
+    background-color: salmon;;
+}
