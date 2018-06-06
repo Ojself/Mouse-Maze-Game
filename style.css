@@ -1,4 +1,8 @@
-/* WEB PAGE */
+
+    /*---------- 
+      FONT import
+    ----------*/
+
 @font-face {
     font-family: 'PirulenRg-Regular';
     font-style: normal;
@@ -6,9 +10,17 @@
     src: local('PirulenRg-Regular'), url('pirulen rg.woff') format('woff');
 }
 
+
+
+    /*---------- 
+      WEB PAGE 
+    ----------*/
+
+
 body {
     background-image: url(img/landscape_movies-the-maze-runner-poster.jpg);
     background-size: cover;
+    padding: unset;
 }
 .game-page {
     background-color: rgba(100, 100, 100, 0.90);
@@ -17,8 +29,8 @@ body {
     margin: 0 auto;
     border-radius: 10px;
     display: block;
+    padding: unset;
 }
-
 .game-page h1 {
     display: block;
     width: 768px;
@@ -27,20 +39,21 @@ body {
     margin-bottom: 10px;
     font-family: "PirulenRg-Regular";
 }
-
 .game-page p {
     border: 1px solid darkslategray;
     background-color: rgba(173, 216, 230, 0.527);
     border-radius: 10px;
-    width: 500px;
-    height: 30px;
-    line-height: 30px;
-    margin: 4px 0 0 22.5% ;
-    padding-left: 7px;
-    font-family: sans-serif
+    width: 700px;
+    height: 35px;
+    line-height: 37px;
+    margin: 4px auto 0 auto ;
+    padding-left: 15px;
+    font-family: sans-serif;
+    font-size: 20px;
+    font-weight: bold;
 }
 
-.maze-div {
+.gameboard {
     background-image: url(img/cartoon_dirt.png);
     background-size: contain;
     width: 768px;
@@ -51,11 +64,67 @@ body {
     border: 10px ridge lightslategray;
     box-sizing: content-box;
     margin: 0 auto;
+    position: relative;
 }
 
 
 
-/* IN GAME */
+
+/* ENEMY LEVEL 2 ANIMATIONS */
+.lvl2-snakes {
+    margin: 0.2% 0;
+    position: absolute;
+    background-image: url(/img/water_moccasin.png);
+    background-size: contain;
+}
+
+.snake-pos-1 {
+    right: 100px;
+    min-height: 14%;
+    min-width: 4.365%;
+    top: 30%;
+    animation: enemy-one 3s ease-in-out infinite alternate both;
+}
+.snake-pos-2 {
+    right: 250px;
+    min-height: 14%;
+    min-width: 4.365%;
+    top: 30%;
+    animation: enemy-one 3s ease-in-out infinite alternate both;
+}
+.snake-pos-3 {
+    right: 347px;
+    min-width: 3.305%;
+    min-height: 5%;
+    top: 75%;
+    animation: enemy-one 3s ease-in-out infinite alternate both;
+}
+.snake-pos-4 {
+    right: 150px;
+    min-width: 3.305%;
+    min-height: 5%;
+    top:80%;
+    animation: enemy-one 3s ease-in-out infinite alternate both;
+}
+
+
+@keyframes enemy-one {
+    0% {
+      -webkit-transform: translateX(0);
+              transform: translateX(0);
+    }
+    100% {
+      -webkit-transform: translateX(-250px);
+              transform: translateX(-250px);
+    }
+  }
+
+
+
+
+    /*---------
+      IN GAME 
+    ---------*/
 
 .left-border {
     border-left: 2px solid black
@@ -73,7 +142,6 @@ body {
 .cell {
     min-width: 3.125%;
     min-height: 5%;
-    /* border: 1px solid black; */
     box-sizing: border-box;
     flex: 1;
 }
@@ -87,15 +155,70 @@ body {
 
 .wall {
     background-image: url(img/wall_vines4.png);
-    /* background-size: cover; */
     background-repeat: repeat;
-    /* border: 1px solid black */
 }
 
-.start-butn {
+.start-btn {
     background-size: cover;
+    background-color: rgb(14, 209, 21);
+    box-shadow: 0px 4px #666;
+    overflow: visible;
+
 }
+.clicked{
+    box-shadow: 0px 1px #666;
+    transform: translateY(4px);
+}
+
 .finish-btn {
-    background-color: salmon;;
-    background-size: cover;
+    background-size: contain;
+    background-repeat: no-repeat;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Borders for the start button. This part is just for the visuals of that button, so I'm hiding it away here. */
+.nw-border {
+    border-left: 4px outset slategray;
+    border-top: 4px outset slategray;
+    border-bottom: none;
+    border-right: none;
+    border-top-left-radius: 10px
+}
+
+.ne-border {
+    border-right: 4px outset slategray;
+    border-top: 4px outset slategray;
+    border-bottom: none;
+    border-left: none; /*Not sure why, but I had to specifify no border for some, so i did it on all of them, just in case it bugs later*/
+    border-top-right-radius: 10px
+}
+.sw-border {
+    border-left: 4px outset slategray;
+    border-bottom: 4px outset slategray;
+    border-right: none;
+    border-top: none;
+    border-bottom-left-radius: 10px;
+    margin-bottom: 5px;
+}
+.se-border {
+    border-right: 4px outset slategray;
+    border-bottom: 4px outset slategray;
+    border-top: none;
+    border-left: none;
+    border-bottom-right-radius: 10px;
+    margin-bottom: 5px;
+}
+

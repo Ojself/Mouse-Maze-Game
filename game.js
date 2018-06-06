@@ -5,10 +5,8 @@
 ---------------------------------------*/
 function Game(maze) {
     this.maze = maze
+    this.level = 0
 }
-
-
-
 
 
 
@@ -22,13 +20,13 @@ function Game(maze) {
 Game.prototype.makeMap = function () {
 
     //Clears the map before the level starts
-    $(".maze-div").empty() 
+    $(".gameboard").empty() 
 
-    //creates empty div for each array-element, then adds it to the gameboard-div "maze-div"
+    //creates empty div for each array-element, then adds it to the gameboard-div "gameboard"
     for (var i=0; i<20; i++) { 
         for(var j=0; j<32; j++) {
             var cellDiv = $( "<div id='" + i + "-" + j + "' class='cell'></div>" );
-            $(".maze-div").append(cellDiv);
+            $(".gameboard").append(cellDiv);
 
 
             //Adding CSS-classes to the different array-elements. 
@@ -54,24 +52,22 @@ Game.prototype.makeMap = function () {
             if( this.maze[i][j] == "*" ) {
                 $( "#" + i + "-" + j ).addClass("wall");
             }
-            //Adding the start-butn class.
+            //Adding the start-btn class.
             if( this.maze[i][j] == "S" ) {
-                $( "#" + i + "-" + j ).addClass( "start-butn" );
-
+                $( "#" + i + "-" + j ).addClass( "start-btn" );
                 //Every corner of the start-button gets a different background-image
                 if(this.maze[i-1][j] === "O" && this.maze[i][j-1] === "O") {
-                    $( "#" + i + "-" + j ).css("background-image", "url(/img/pedestal_nw.png)")
+                    $( "#" + i + "-" + j ).addClass("nw-border")
                 }
                 if(this.maze[i-1][j] === "O" && this.maze[i][j+1] === "O") {
-                    $( "#" + i + "-" + j ).css("background-image", "url(/img/pedestal_ne.png)")
+                    $( "#" + i + "-" + j ).addClass("ne-border")
                 }
                 if(this.maze[i+1][j] === "O" && this.maze[i][j-1] === "O") {
-                    $( "#" + i + "-" + j ).css("background-image", "url(/img/pedestal_sw.png)")
+                    $( "#" + i + "-" + j ).addClass("sw-border")
                 }
                 if(this.maze[i+1][j] === "O" && this.maze[i][j+1] === "O") {
-                    $( "#" + i + "-" + j ).css("background-image", "url(/img/pedestal_se.png)")
+                    $( "#" + i + "-" + j ).addClass("se-border")
                 }
-
             }
             //Adding the finish-btn class.
             if( this.maze[i][j] == "F" ) {
@@ -90,9 +86,9 @@ Game.prototype.makeMap = function () {
                     $( "#" + i + "-" + j ).css("background-image", "url(/img/cartoon_grass_se.png)")
                 }
             }
-
         }
     }
+
 
 
 
@@ -100,31 +96,71 @@ Game.prototype.makeMap = function () {
 /* ----------------------------------
     jQuery functionalities (gameplay) 
 -----------------------------------*/
-
-
-    $( ".start-butn" ).click(function() {
+    $( ".start-btn" ).click(function() {
         $(".wall").addClass("active")
-        $(".hint").text("YOU DON'T STAND A CHANCE")
+        $(".hint").text("Move your mouse through the maze. Don't touch the walls!").css("color", "black")
     });
 
+    //Animation of starting button. 
+    $( ".start-btn" ).mousedown(function() {
+        $( ".start-btn" ).toggleClass("clicked")
+    })
+    $( ".start-btn" ).mouseup(function() {
+        $( ".start-btn" ).toggleClass("clicked")
+    })
+    //You lose if mouse hovers on wall (also enemies: see separate code block, ca. line 160)
     $(".wall").hover(function(){
         if ($(".wall").hasClass("active")) {
             $(".wall").removeClass("active")
-            $(".hint").text("HAH. Dare try again? Just press the button.")
+            $(".hint").text("HAH. You lost. Try again? Just press the button.").css("color", "brown")
         };
     });
-
+    //you win and next level is triggered when mouse reached
     $(".finish-btn").hover(function(){
         if ($(".wall").hasClass("active")) {
             $(".wall").removeClass("active")
             alert("You won. You aren't completely worthless :D.")
-            $(".hint").text("Hey ther- Oh, it's you again... ")
-            secondLevel.makeMap()
+            $(".hint").text("Oh, you actually made it? Wow. Well you know what to do")
+            nextLevel() //Chooses the next level (see below)
         };
     });
+} //end of makeMap()
 
-    
-} //end of function makeMap()
+
+
+/*-------------------------------------
+    CHOOSING THE NEXT LEVEL
+-------------------------------------*/
+function nextLevel() {
+    if($(".lvl2-snakes").length >=0) { //Checks if snakes-enemy exists yet. If not -> level 2.
+        secondLevel.makeMap()
+        injectEnemyLvl2()
+    }
+    else if ($(".lvl2-snakes").length < 0) {
+        console.log("hello level 3?")
+        thirdLevel.makeMap()
+    }
+}
+
+
+
+/*-------------------------------------
+    ADDING ENEMIES TO LEVEL 2
+-------------------------------------*/
+function injectEnemyLvl2() {
+    var enemy1 = $( "<div class='lvl2-snakes snake-pos-1'></div>" )
+    var enemy2 = $( "<div class='lvl2-snakes snake-pos-2'></div>" )
+    var enemy3 = $( "<div class='lvl2-snakes snake-pos-3'></div>" )
+    var enemy4 = $( "<div class='lvl2-snakes snake-pos-4'></div>" )
+    $(".gameboard").append(enemy1, enemy2, enemy3, enemy4);
+
+    $(".lvl2-snakes").mouseover(function(){
+        if ($(".wall").hasClass("active")) {
+            $(".wall").removeClass("active")
+            $(".hint").text("You didn't see the only moving thing on the map, huh.")
+        };
+    });
+}
 
 
 
@@ -182,6 +218,29 @@ var secondLevel = new Game([
     ["*", "O", "O", "O", "O", "*", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O"],
     ["*", "O", "S", "S", "O", "*", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "F", "F", "O"],
     ["*", "O", "S", "S", "O", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "O", "O", "F", "F", "O"],
+    ["*", "O", "O", "O", "O", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "O", "O", "O", "O", "O"],
+    ["*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "O", "O", "O", "O", "O"],
+    ])
+
+var thirdLevel = new Game([
+    ["*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*"],
+    ["*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*"],
+    ["*", "O", "O", "O", "O", "O", "O", "*", "*", "O", "*", "*", "O", "O", "O", "O", "*", "*", "O", "O", "O", "O", "*", "*", "O", "*", "*", "*", "*", "*", "*", "*"],
+    ["*", "O", "O", "O", "O", "O", "O", "*", "*", "O", "*", "*", "O", "O", "O", "O", "*", "*", "O", "O", "O", "O", "*", "*", "O", "*", "*", "*", "*", "*", "*", "*"],
+    ["*", "O", "O", "*", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "*", "*", "*", "*", "*"],
+    ["*", "O", "O", "*", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "*", "*", "*", "*", "*"],
+    ["*", "O", "O", "*", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "*", "*", "*", "*", "*"],
+    ["*", "O", "O", "*", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "*", "*", "*", "*", "*"],
+    ["*", "O", "O", "*", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "*", "*", "*", "*", "*"],
+    ["*", "O", "O", "*", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "*", "*", "*", "*", "*"],
+    ["*", "O", "O", "*", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "*", "*", "*", "*", "*"],
+    ["*", "O", "O", "*", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "*", "*", "*", "*", "*"],
+    ["*", "O", "O", "*", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "*", "*", "*", "*", "*"],
+    ["*", "O", "O", "*", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "*", "*", "*", "*", "*"],
+    ["*", "O", "O", "*", "*", "*", "O", "*", "*", "O", "O", "O", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "O", "O", "O", "O"],
+    ["*", "O", "O", "O", "O", "*", "O", "*", "*", "O", "O", "O", "O", "*", "*", "O", "O", "O", "O", "*", "*", "O", "O", "O", "O", "*", "*", "O", "O", "O", "O", "O"],
+    ["*", "O", "S", "S", "O", "*", "O", "*", "*", "O", "*", "*", "O", "*", "*", "O", "O", "O", "O", "*", "*", "O", "O", "O", "O", "O", "O", "O", "O", "F", "F", "O"],
+    ["*", "O", "S", "S", "O", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "O", "O", "O", "O", "O", "F", "F", "O"],
     ["*", "O", "O", "O", "O", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "O", "O", "O", "O", "O"],
     ["*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "*", "O", "O", "O", "O", "O"],
     ])
