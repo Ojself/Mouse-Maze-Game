@@ -1,14 +1,61 @@
+/* WEB PAGE */
+@font-face {
+    font-family: 'PirulenRg-Regular';
+    font-style: normal;
+    font-weight: normal;
+    src: local('PirulenRg-Regular'), url('pirulen rg.woff') format('woff');
+}
+
+body {
+    background-image: url(img/landscape_movies-the-maze-runner-poster.jpg);
+    background-size: cover;
+}
+.game-page {
+    background-color: rgba(100, 100, 100, 0.90);
+    height: 750px;
+    width: 1400px;
+    margin: 0 auto;
+    border-radius: 10px;
+    display: block;
+}
+
+.game-page h1 {
+    display: block;
+    width: 768px;
+    margin:0 auto ;
+    text-align: center;
+    margin-bottom: 10px;
+    font-family: "PirulenRg-Regular";
+}
+
+.game-page p {
+    border: 1px solid darkslategray;
+    background-color: rgba(173, 216, 230, 0.527);
+    border-radius: 10px;
+    width: 500px;
+    height: 30px;
+    line-height: 30px;
+    margin: 4px 0 0 22.5% ;
+    padding-left: 7px;
+    font-family: sans-serif
+}
+
 .maze-div {
-    background-color: lightblue;
+    background-image: url(img/cartoon_dirt.png);
+    background-size: contain;
     width: 768px;
     height: 480px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    border: 2px solid black;
+    border: 10px ridge lightslategray;
+    box-sizing: content-box;
     margin: 0 auto;
-
 }
+
+
+
+/* IN GAME */
 
 .left-border {
     border-left: 2px solid black
@@ -34,8 +81,8 @@
 
 
 .game-area {
-    background-image: url(img/dirt.png);
-    background-size: cover;
+    background-image: url(img/cartoon_dirt.png);
+    background-size: contain;
 }
 
 .wall {
@@ -45,11 +92,10 @@
     /* border: 1px solid black */
 }
 
-.start-btn {
-    background-image: url(img/dngn_green_crystal_wall.png);
-
+.start-butn {
+    background-size: cover;
 }
-
 .finish-btn {
     background-color: salmon;;
+    background-size: cover;
 }
