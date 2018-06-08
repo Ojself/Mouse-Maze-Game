@@ -7,21 +7,25 @@
     font-family: 'PirulenRg-Regular';
     font-style: normal;
     font-weight: normal;
-    src: local('PirulenRg-Regular'), url('pirulen rg.woff') format('woff');
+    src: local('PirulenRg-Regular'), url('img/pirulen rg.woff') format('woff');
 }
-
+@font-face {
+    font-family: 'Dungeon';
+    src: url('img/Dungeon.ttf') format('truetype')
+}
 
 
     /*---------- 
       WEB PAGE 
     ----------*/
 
-
 body {
     background-image: url(img/landscape_movies-the-maze-runner-poster.jpg);
     background-size: cover;
     padding: unset;
 }
+
+/* The div surrounding the gameboard, and text elements inside */
 .game-page {
     background-color: rgba(100, 100, 100, 0.90);
     height: 750px;
@@ -43,16 +47,17 @@ body {
     border: 1px solid darkslategray;
     background-color: rgba(173, 216, 230, 0.527);
     border-radius: 10px;
-    width: 700px;
+    width: 740px ;
     height: 35px;
     line-height: 37px;
     margin: 4px auto 0 auto ;
-    padding-left: 15px;
-    font-family: sans-serif;
+    padding-left: 12px;
+    font-family: "Dungeon";
     font-size: 20px;
-    font-weight: bold;
 }
 
+
+/* The gameboard! */
 .gameboard {
     background-image: url(img/cartoon_dirt.png);
     background-size: contain;
@@ -68,13 +73,124 @@ body {
 }
 
 
+    /*---------
+      IN GAME 
+    ---------*/
 
 
-/* ENEMY LEVEL 2 ANIMATIONS */
+.game-area {
+    background-image: url(img/cartoon_dirt.png);
+    background-size: contain;
+}
+
+
+/*Each div on the gameboard*/
+.cell {
+    min-width: 3.125%;
+    min-height: 5%;
+    box-sizing: border-box;
+    flex: 1;
+}
+
+
+.wall {
+    background-image: url(img/wall_vines4.png);
+    background-repeat: repeat;
+}
+
+.start-btn {
+    background-size: cover;
+    background-color: rgb(14, 209, 21);
+    box-shadow: 0px 4px #666;
+    overflow: visible;
+
+}
+.clicked{
+    box-shadow: 0px 1px #666;
+    transform: translateY(4px);
+}
+
+.finish-btn {
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+
+
+/*Using this to add borders ONLY between safe-area and walls*/
+.left-border {
+    border-left: 2px solid black
+}
+.right-border {
+    border-right: 2px solid black
+}
+.top-border {
+    border-top: 2px solid black
+}
+.bottom-border {
+    border-bottom: 2px solid black
+}
+
+
+/* background-images for the finish-area */
+
+.cartoon_grass_nw {
+    background-image: url(img/cartoon_grass_nw.png)
+}
+.cartoon_grass_ne {
+    background-image: url(img/cartoon_grass_ne.png)
+}
+.cartoon_grass_sw {
+    background-image: url(img/cartoon_grass_sw.png)
+}
+.cartoon_grass_se {
+    background-image: url(img/cartoon_grass_se.png)
+}
+
+
+
+/* Borders for the start button.*/
+.nw-border {
+    border-left: 4px outset slategray;
+    border-top: 4px outset slategray;
+    border-bottom: none;
+    border-right: none;
+    border-top-left-radius: 10px
+}
+
+.ne-border {
+    border-right: 4px outset slategray;
+    border-top: 4px outset slategray;
+    border-bottom: none;
+    border-left: none; /*I had to specifify no borders where i didnt want them only this one, so i did it on all of them, just in case of later bugs*/
+    border-top-right-radius: 10px
+}
+.sw-border {
+    border-left: 4px outset slategray;
+    border-bottom: 4px outset slategray;
+    border-right: none;
+    border-top: none;
+    border-bottom-left-radius: 10px;
+    margin-bottom: 5px;
+}
+.se-border {
+    border-right: 4px outset slategray;
+    border-bottom: 4px outset slategray;
+    border-top: none;
+    border-left: none;
+    border-bottom-right-radius: 10px;
+    margin-bottom: 5px;
+}
+
+
+
+
+
+/* ENEMY LEVEL 2 VISUALS AND ANIMATIONS */
 .lvl2-snakes {
     margin: 0.2% 0;
     position: absolute;
-    background-image: url(/img/water_moccasin.png);
+    background-image: url(img/water_moccasin.png);
     background-size: contain;
 }
 
@@ -119,106 +235,4 @@ body {
     }
   }
 
-
-
-
-    /*---------
-      IN GAME 
-    ---------*/
-
-.left-border {
-    border-left: 2px solid black
-}
-.right-border {
-    border-right: 2px solid black
-}
-.top-border {
-    border-top: 2px solid black
-}
-.bottom-border {
-    border-bottom: 2px solid black
-}
-
-.cell {
-    min-width: 3.125%;
-    min-height: 5%;
-    box-sizing: border-box;
-    flex: 1;
-}
-
-
-
-.game-area {
-    background-image: url(img/cartoon_dirt.png);
-    background-size: contain;
-}
-
-.wall {
-    background-image: url(img/wall_vines4.png);
-    background-repeat: repeat;
-}
-
-.start-btn {
-    background-size: cover;
-    background-color: rgb(14, 209, 21);
-    box-shadow: 0px 4px #666;
-    overflow: visible;
-
-}
-.clicked{
-    box-shadow: 0px 1px #666;
-    transform: translateY(4px);
-}
-
-.finish-btn {
-    background-size: contain;
-    background-repeat: no-repeat;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Borders for the start button. This part is just for the visuals of that button, so I'm hiding it away here. */
-.nw-border {
-    border-left: 4px outset slategray;
-    border-top: 4px outset slategray;
-    border-bottom: none;
-    border-right: none;
-    border-top-left-radius: 10px
-}
-
-.ne-border {
-    border-right: 4px outset slategray;
-    border-top: 4px outset slategray;
-    border-bottom: none;
-    border-left: none; /*Not sure why, but I had to specifify no border for some, so i did it on all of them, just in case it bugs later*/
-    border-top-right-radius: 10px
-}
-.sw-border {
-    border-left: 4px outset slategray;
-    border-bottom: 4px outset slategray;
-    border-right: none;
-    border-top: none;
-    border-bottom-left-radius: 10px;
-    margin-bottom: 5px;
-}
-.se-border {
-    border-right: 4px outset slategray;
-    border-bottom: 4px outset slategray;
-    border-top: none;
-    border-left: none;
-    border-bottom-right-radius: 10px;
-    margin-bottom: 5px;
-}
 

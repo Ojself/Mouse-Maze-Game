@@ -1,8 +1,10 @@
 
 
-/* --------------------------------------
-    The constructor-class for the maze 
----------------------------------------*/
+/* ----------------------------------------------------------------------------------------
+|
+|    The constructor-class for the maze 
+|
+\-----------------------------------------------------------------------------------------*/
 function Game(maze, level) {
     this.maze = maze
     this.level = level
@@ -13,10 +15,14 @@ var mazeGame = new Game ("", 1)
 
 
 
-/* --------------------------------------
-    makeMap-method: generates the current map-instance to the DOM.
-    this method also includes jQuery functionalities (gameplay)
----------------------------------------*/
+
+
+/* ----------------------------------------------------------------------------------------
+|
+|    Generating the current map-instance to the DOM.
+|    also includes jQuery functionalities (gameplay & visuals)
+|
+\----------------------------------------------------------------------------------------*/
 
 Game.prototype.makeMap = function () {
 
@@ -74,17 +80,17 @@ Game.prototype.makeMap = function () {
             if( this.maze[i][j] == "F" ) {
                 //Every corner of the finish-button also gets a different background-image
                 $( "#" + i + "-" + j ).addClass( "finish-btn" );
-                if(this.maze[i-1][j] === "O" && this.maze[i][j-1] === "O") {
-                    $( "#" + i + "-" + j ).css("background-image", "url(/img/cartoon_grass_nw.png)")
+                if(this.maze[i-1][j] === "O" && this.maze[i][j-1] === "O") { //north-west-finish-button
+                    $( "#" + i + "-" + j ).addClass( "cartoon_grass_nw" )
                 }
-                if(this.maze[i-1][j] === "O" && this.maze[i][j+1] === "O") {
-                    $( "#" + i + "-" + j ).css("background-image", "url(/img/cartoon_grass_ne.png)")
+                if(this.maze[i-1][j] === "O" && this.maze[i][j+1] === "O") {//north-east-finish-button
+                    $( "#" + i + "-" + j ).addClass( "cartoon_grass_ne" )
                 }
-                if(this.maze[i+1][j] === "O" && this.maze[i][j-1] === "O") {
-                    $( "#" + i + "-" + j ).css("background-image", "url(/img/cartoon_grass_sw.png)")
+                if(this.maze[i+1][j] === "O" && this.maze[i][j-1] === "O") {//south-west-finish-button
+                    $( "#" + i + "-" + j ).addClass( "cartoon_grass_sw" )
                 }
-                if(this.maze[i+1][j] === "O" && this.maze[i][j+1] === "O") {
-                    $( "#" + i + "-" + j ).css("background-image", "url(/img/cartoon_grass_se.png)")
+                if(this.maze[i+1][j] === "O" && this.maze[i][j+1] === "O") {//south-east-finish-button
+                    $( "#" + i + "-" + j ).addClass( "cartoon_grass_se" )
                 }
             }
         }
@@ -94,34 +100,86 @@ Game.prototype.makeMap = function () {
 
 
 
-/* ----------------------------------
-    jQuery functionalities (gameplay) 
------------------------------------*/
+
+
+/* ----------------------------------------------------------------------------------------
+|
+|    jQuery functionalities (start-button, walls, finish-area, etc...) 
+|
+\----------------------------------------------------------------------------------------*/
+    /*-------------------------------------
+    STARTING THE LEVEL
+    -------------------------------------*/
     $( ".start-btn" ).click(function() {
         $(".wall").addClass("active")
-        $(".hint").text("Move your mouse through the maze. Don't touch the walls!").css("color", "black")
-    });
+        $("#hammertime").get(0).load()
+        $("#hammertime").get(0).play()
 
-    //Animation of starting button. 
+        //different start-msg for different levels
+        if      (mazeGame.level == 1){
+            $(".hint").text("Move your mouse through the maze. Don't touch the walls!").css("color", "black")
+        }
+        else if (mazeGame.level == 2) {
+            var purpleSnakesTxt = $( "<span class='hint-span'> pointer-eating snakes.</span>").css("color", "purple")
+            $(".hint").text("Watch out for those").css("color", "black").append(purpleSnakesTxt)
+        }
+        else if (mazeGame.level == 3) {
+            var evilCurse = $( "<span class='hint-span'>evil curse </span>").css("color", "darkred")
+            var lurksHere = $( "<span class='hint-span'>that lurks here</span>").css("color", "black")
+            $(".hint").text("This dungeon hints at the ").css("color", "black").append(evilCurse).append(lurksHere)
+        }
+        
+    });
     $( ".start-btn" ).mousedown(function() {
         $( ".start-btn" ).toggleClass("clicked")
     })
     $( ".start-btn" ).mouseup(function() {
         $( ".start-btn" ).toggleClass("clicked")
     })
-    //You lose if mouse hovers on wall (also enemies: see separate code block, ca. line 160)
+
+    /*-------------------------------------
+    LOSING THE LEVEL
+    for enemies: see separate code block below-> "function injectEnemyLvl2()"
+    -------------------------------------*/
     $(".wall").hover(function(){
         if ($(".wall").hasClass("active")) {
             $(".wall").removeClass("active")
-            $(".hint").text("HAH. You lost. Try again? Just press the button.").css("color", "brown")
-        };
+            $("#hammertime").get(0).pause()
+            $("#wall-hit").get(0).play()
+
+            //different msg for different levels
+            if      (mazeGame.level == 1){
+                var youLost = $( "<span class='hint-span'>lost. </span>").css("color", "darkred")
+                var justPress = $( "<span class='hint-span'>Try again? Just press </span>").css("color", "black")
+                var theButton = $( "<span class='hint-span'>the button.</span>").css("color", "chartreuse")
+                $(".hint").text("HAH. You ").css("color", "black").append(youLost).append(justPress).append(theButton)
+            }
+            else if (mazeGame.level == 2) {
+                $(".hint").text("Really? The wall? ").css("color", "darkred")
+            }
+            else if (mazeGame.level == 3) {
+                var noFreeTimeSocialLife = $( "<span class='hint-span'>curse you with no free-time or social life!</span>").css("color", "darkred")
+                var mwahahaha = $( "<span class='hint-span'> MWAHAHA!</span>").css("color", "black")
+                $(".hint").text("The iron-walls ").css("color","black").append(noFreeTimeSocialLife).append(mwahahaha)
+                $("#wall-lose").get(0).play()
+            }
+        };  
     });
-    //you win and next level is triggered when mouse reached
+
+    /*-------------------------------------
+    WINNING THE LEVEL
+    -------------------------------------*/
     $(".finish-btn").hover(function(){
         if ($(".wall").hasClass("active")) {
             $(".wall").removeClass("active")
-            alert("You won. You aren't completely worthless :D.")
-            $(".hint").text("Oh, you actually made it? Wow. Well you know what to do")
+            $("#hammertime").get(0).pause()
+            if (mazeGame.level < 3) {
+                $("#teleport").get(0).play()
+            }
+            else {
+                $("#final-level-win").get(0).play(); 
+                $(".hint").text("You. You are a champion. You deserve this win.").css("color","gold").css("text-align","center").css("text-shadow","2px 2px black")
+            }
             nextLevel() //Chooses the next level (see below)
         };
     });
@@ -129,25 +187,45 @@ Game.prototype.makeMap = function () {
 
 
 
-/*-------------------------------------
-    CHOOSING THE NEXT LEVEL
--------------------------------------*/
+
+
+
+
+/*----------------------------------------------------------------------------------------
+|
+|    Next level-function
+|
+\----------------------------------------------------------------------------------------*/
+
 function nextLevel() {
     if (mazeGame.level === 1) {
         secondLevel.makeMap()
         injectEnemyLvl2()
-        mazeGame.level++
+        var whatToDo = $( "<span class='hint-span'>what to do.</span>").css("color", "chartreuse")
+        $(".hint").text("Oh, you actually made it? Wow. Well, you know ").append(whatToDo)
     }
     else if (mazeGame.level === 2) {
         thirdLevel.makeMap()
+        $(".hint").text("So. Uhm. Lucky you, its a safe zone! No enemies!")
     }
+    else if (mazeGame.level >= 3) {
+        $("#final-level-win").get(0).play()
+    }
+
+    mazeGame.level++
 }
 
 
 
-/*-------------------------------------
-    ADDING ENEMIES TO LEVEL 2
--------------------------------------*/
+
+
+
+/*----------------------------------------------------------------------------------------
+|
+|    Injecting enemies to DOM
+|
+\----------------------------------------------------------------------------------------*/
+
 function injectEnemyLvl2() {
     var enemy1 = $( "<div class='lvl2-snakes snake-pos-1'></div>" )
     var enemy2 = $( "<div class='lvl2-snakes snake-pos-2'></div>" )
@@ -158,7 +236,9 @@ function injectEnemyLvl2() {
     $(".lvl2-snakes").mouseover(function(){
         if ($(".wall").hasClass("active")) {
             $(".wall").removeClass("active")
-            $(".hint").text("You didn't see the only moving thing on the map, huh.")
+            var purpleSnakesTxt = $( "<span class='hint-span'> pointer-eating snakes</span>").css("color", "purple")
+            var mateTxt = $( "<span class='hint-span'> mate. Try again.</span>").css("color", "black")
+            $(".hint").text("You want to avoid the").css("color","black").append(purpleSnakesTxt).append(mateTxt)
         };
     });
 }
@@ -168,9 +248,11 @@ function injectEnemyLvl2() {
 
 
 
-/* --------------------------------------
-    Map instances
----------------------------------------*/
+/*----------------------------------------------------------------------------------------
+|
+|    Map instances
+|
+\----------------------------------------------------------------------------------------*/
 
 
 //FIRST LEVEL
