@@ -233,8 +233,10 @@ function injectEnemyLvl2() {
     var enemy4 = $( "<div class='lvl2-snakes snake-pos-4'></div>" )
     $(".gameboard").append(enemy1, enemy2, enemy3, enemy4);
 
-    $(".lvl2-snakes").mouseover(function(){
+    $(".lvl2-snakes").hover(function(){
         if ($(".wall").hasClass("active")) {
+            $("#hammertime").get(0).pause()
+            $("#wall-hit").get(0).play()
             $(".wall").removeClass("active")
             var purpleSnakesTxt = $( "<span class='hint-span'> pointer-eating snakes</span>").css("color", "purple")
             var mateTxt = $( "<span class='hint-span'> mate. Try again.</span>").css("color", "black")
